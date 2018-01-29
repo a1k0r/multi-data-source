@@ -10,21 +10,21 @@ class AbstractConnector {
     /**
      * @returns {Promise<AbstractConnection>} Connection
      */
-    async getConnection() {
+    getConnection() {
         throw new TypeError('This method must be overridden!');
     }
 
     /**
      * @param {AbstractConnection} connection Abstract connection
      */
-    async releaseConnection(connection) {
+    releaseConnection(connection) {
         throw new TypeError('This method must be overridden!');
     }
 
     /**
      * @async
      */
-    async closeConnection() {
+    closeConnection() {
         throw new TypeError('This method must be overridden!');
     }
 }

@@ -8,40 +8,13 @@ class PostgresConnection extends AbstractConnection {
         super(config);
     }
 
-    // async query(queryName, queryParams, queryOptions = null) {
-    //     const self = this;
-    //
-    //     // let timeOld;
-    //     // if (queryOptions && queryOptions.time) {
-    //     //     timeOld = Date.now();
-    //     // }
-    //
-    //     const data = await self.client.query(self.queries[queryName], queryParams);
-    //     const {rows} = data;
-    //
-    //     // if (queryOptions && queryOptions.time) {
-    //     //     log.info(`Query ${queryName} execution time: ${Date.now() - timeOld} ms`);
-    //     // }
-    //
-    //     return rows;
-    // }
     async _executeQuery(query) {
         const {rows} = await this.client.query(query);
         return rows;
     }
 
     async rawQuery(queryText, queryParams, queryOptions = null) {
-        // let timeOld;
-        // if (queryOptions && queryOptions.time && queryOptions.queryName) {
-        //     timeOld = Date.now();
-        // }
-
         const {rows} = await this.client.query(queryText, queryParams);
-
-        // if (queryOptions && queryOptions.time) {
-        //     log.info(`Query ${queryOptions.queryName} execution time: ${Date.now() - timeOld} ms`);
-        // }
-
         return rows;
     }
 
@@ -56,9 +29,8 @@ class PostgresConnection extends AbstractConnection {
         }
 
         const preparedQuery = escapeParams(queryText, queryParams);
-        console.log(preparedQuery);
 
-        // return this._executeQuery(preparedQuery);
+        return this._executeQuery(preparedQuery);
     }
 
     getQueryText(queryName) {

@@ -1,5 +1,4 @@
 const {Pool} = require('pg');
-// const log = require('../../../../app/components/log')(module);
 
 const AbstractConnector = require('./AbstractConnector');
 const PostgresConnection = require('../connections/PostgresConnection');
