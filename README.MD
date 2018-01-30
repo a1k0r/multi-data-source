@@ -22,6 +22,76 @@ npm install multi-data-source
 
 ## Usage example
 
+### Storage config example
+
+```js
+const config = {
+    'postgres': {
+        'host': '127.0.0.1',
+        'port': 5432,
+        'database': 'postgres',
+        'user': 'postgres',
+        'password': '',
+        'storageType': 'pg',
+    },
+};
+
+const storage = new Storage(config);
+```
+
+### Query definition example
+
+```js
+const getUsersByScore = {
+    name: 'getUsersByScore',
+    sql: `
+        SELECT id {{nickname}}
+          FROM users
+          WHERE score > :score
+            {{balance}}
+        `,
+    addons: {
+        noGlobalJoin: {
+            arg: {name: 'global', value: false},
+            sql: 'INNER JOIN mega_jackpot_halls AS mjh USING(hall_id)',
+        },
+        nickname: {
+            arg: {name: 'needNickname', value: true},
+            sql: ', nickname',
+        },
+        balance: {
+            arg: {name: 'balanceCondition', value: true},
+            sql: 'AND balance >= :balance',
+        },
+    },
+};
+```
+
+### Query execution example
+
+```js
+let connection;
+try {
+    connection = await storage.getConnection('postgres');
+
+    const data = await connection.query(getUsersByScore,
+        {
+            score: 100,
+            balance: 50,
+        },
+        {
+            templateParams: {balanceCondition: true},
+        }
+    );
+    console.log(data);
+} catch (error) {
+    console.error(error);
+} finally {
+    if (connection) {
+        await connection.release;
+    }
+}
+```
 
 ## Author
 
