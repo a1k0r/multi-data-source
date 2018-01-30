@@ -1,26 +1,34 @@
 const AbstractConnection = require('./AbstractConnection');
-// const log = require('../../../../app/components/log')(module);
-// const {NoSuchQuery} = require('../errors');
 const {escapeParams, QueryTemplater} = require('../query');
 
+/**
+ * @inheritDoc
+ */
 class PostgresConnection extends AbstractConnection {
-    constructor(config) {
-        super(config);
-    }
-
+    /**
+     * @async
+     * @param {String} query SQL
+     * @returns {Promise<Array>} result
+     * @private
+     */
     async _executeQuery(query) {
         const {rows} = await this.client.query(query);
         return rows;
     }
 
-    async rawQuery(queryText, queryParams, queryOptions = null) {
-        const {rows} = await this.client.query(queryText, queryParams);
-        return rows;
+    /**
+     * @inheritDoc
+     */
+    rawQuery(queryText, queryParams, queryOptions = null) {
+        const preparedQuery = escapeParams(queryText, queryParams);
+        return this._executeQuery(preparedQuery);
     }
 
-    async query(queryObject, queryParams, queryOptions = {}) {
-        // TODO: unused destructed "types" need to add opportunity to pass array as PG arrays
-        const {sql, types} = queryObject;
+    /**
+     * @inheritDoc
+     */
+    query(queryObject, queryParams, queryOptions = {}) {
+        const {sql} = queryObject;
         let queryText = sql;
 
         const {templateParams} = queryOptions;
@@ -33,22 +41,30 @@ class PostgresConnection extends AbstractConnection {
         return this._executeQuery(preparedQuery);
     }
 
-    getQueryText(queryName) {
-        return this.queries[queryName];
-    }
-
+    /**
+     * @inheritDoc
+     */
     async transaction() {
         await this.client.query('BEGIN;');
     }
 
+    /**
+     * @inheritDoc
+     */
     async commit() {
         await this.client.query('COMMIT;');
     }
 
+    /**
+     * @inheritDoc
+     */
     async rollback() {
         await this.client.query('ROLLBACK;');
     }
 
+    /**
+     * @inheritDoc
+     */
     async release() {
         await this.client.release();
     }

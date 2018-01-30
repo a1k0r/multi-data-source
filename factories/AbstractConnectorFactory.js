@@ -18,6 +18,21 @@ class AbstractConnectorFactory {
     }
 
     /**
+     * @param {String} storageName storage name in config
+     * @returns {Object} config
+     * @protected
+     */
+    _getStorageConfig(storageName) {
+        const config = this.storageConfig[storageName];
+        if (!config) {
+            throw new ReferenceError('Invalid storage name!');
+        }
+
+        return config;
+    }
+
+    /**
+     * @abstract
      * @param {String} storageName storage name
      * @returns {Promise<AbstractConnector>} connector
      */

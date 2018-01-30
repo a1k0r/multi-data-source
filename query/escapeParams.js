@@ -40,7 +40,7 @@ const escapeValue = (value, type) => {
     } else if (value instanceof Buffer) {
         return `E'\\\\x${value.toString('hex')}'`;
     } else if (Array.isArray(value) === true) {
-        return processArray(value, type)
+        return processArray(value, type);
     } else if (value === Object(value)) {
         literal = JSON.stringify(value);
     } else {

@@ -1,4 +1,11 @@
+/**
+ * @abstract
+ * @class {AbstractConnector}
+ */
 class AbstractConnector {
+    /**
+     * @param {Object} config config
+     */
     constructor(config) {
         this.config = config;
 
@@ -8,6 +15,8 @@ class AbstractConnector {
     }
 
     /**
+     * @abstract
+     * @async
      * @returns {Promise<AbstractConnection>} Connection
      */
     getConnection() {
@@ -15,6 +24,8 @@ class AbstractConnector {
     }
 
     /**
+     * @abstract
+     * @async
      * @param {AbstractConnection} connection Abstract connection
      */
     releaseConnection(connection) {
@@ -22,6 +33,7 @@ class AbstractConnector {
     }
 
     /**
+     * @abstract
      * @async
      */
     closeConnection() {

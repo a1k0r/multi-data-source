@@ -1,4 +1,11 @@
+/**
+ * @class {AbstractConnection}
+ * @abstract
+ */
 class AbstractConnection {
+    /**
+     * @param {{client: object, queries: object?}} config config obj
+     */
     constructor(config) {
         this.config = config;
         this.client = config.client;
@@ -10,61 +17,64 @@ class AbstractConnection {
     }
 
     /**
-     * @param {Object} queryObject
-     * @param {Object} queryParams
-     * @param {Object} queryOptions
-     * @returns {Promise<Array>}
+     * @abstract
+     * @async
+     * @param {{name: String, sql:String, addonds: Object}} queryObject query data
+     * @param {Object} queryParams named params
+     * @param {Object} queryOptions options
+     * @returns {Promise<Array>} query result
      */
     query(queryObject, queryParams, queryOptions = null) {
         throw new TypeError('This method must be overridden!');
     }
 
     /**
-     * @returns {Promise<null>}
+     * @abstract
+     * @async
+     * @returns {Promise<null>} null
      */
     transaction() {
         throw new TypeError('This method must be overridden!');
     }
 
     /**
-     * @returns {Promise<null>}
+     * @abstract
+     * @async
+     * @returns {Promise<null>} null
      */
     commit() {
         throw new TypeError('This method must be overridden!');
     }
 
     /**
-     * @returns {Promise<null>}
+     * @abstract
+     * @async
+     * @returns {Promise<null>} null
      */
     rollback() {
         throw new TypeError('This method must be overridden!');
     }
 
     /**
-     * @returns {String}
-     */
-    getQueryText(queryName) {
-        throw new TypeError('This method must be overridden!');
-    }
-
-    /**
-     * @param {String} queryText
-     * @param {Array || Object} queryParams
-     * @param {Object} queryOptions
-     * @returns {Promise<Array>}
+     * @abstract
+     * @async
+     * @param {String} queryText SQL
+     * @param {Object} queryParams Named params
+     * @param {Object} queryOptions Options
+     * @returns {Promise<Array>} Query result
      */
     rawQuery(queryText, queryParams, queryOptions = null) {
         throw new TypeError('This method must be overridden!');
     }
 
     /**
-     * @returns {Promise<null>}
+     * @abstract
+     * @async
+     * @returns {Promise<null>} null
      */
     release() {
         throw new TypeError('This method must be overridden!');
     }
-
-
 }
 
 module.exports = AbstractConnection;

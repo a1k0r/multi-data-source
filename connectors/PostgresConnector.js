@@ -3,7 +3,13 @@ const {Pool} = require('pg');
 const AbstractConnector = require('./AbstractConnector');
 const PostgresConnection = require('../connections/PostgresConnection');
 
+/**
+ * @inheritDoc
+ */
 class PostgresConnector extends AbstractConnector {
+    /**
+     * @inheritDoc
+     */
     constructor(config) {
         super(config);
 
@@ -14,6 +20,9 @@ class PostgresConnector extends AbstractConnector {
         // });
     }
 
+    /**
+     * @inheritDoc
+     */
     async getConnection() {
         const client = await this.pool.connect();
 
@@ -27,11 +36,16 @@ class PostgresConnector extends AbstractConnector {
         return connection;
     }
 
-
+    /**
+     * @inheritDoc
+     */
     async releaseConnection(connection) {
         await connection.client.release();
     }
 
+    /**
+     * @inheritDoc
+     */
     async closeConnection() {
         await this.pool.end();
     }

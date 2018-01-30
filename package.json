@@ -2,6 +2,9 @@
   "name": "multi-storage",
   "author": "Pavel Romanov <alkor@alkor.pw>",
   "version": "0.0.1",
+  "scripts": {
+    "autofix": "eslint --fix ."
+  },
   "dependencies": {
     "pg": "^7.4.1",
     "mobitel-json-schema-template": "^1.0.3",

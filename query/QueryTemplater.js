@@ -2,10 +2,20 @@
  * @class
  */
 class QueryTemplater {
+    /**
+     * @constructor
+     */
     constructor() {
         this.queryCache = new Map();
     }
 
+    /**
+     * @param {String} name queryName
+     * @param {Object} buildParams queryTemplateParams
+     * @param {String} sql queryText
+     * @param {Object} addons queryTemplateAddons
+     * @returns {String} built query
+     */
     buildQuery({name, sql, addons}, buildParams) {
         let builtQuery;
         const queryKey = JSON.stringify({name, buildParams});
