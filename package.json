@@ -1,6 +1,11 @@
 {
   "name": "multi-data-source",
   "author": "Pavel Romanov <alkor@alkor.pw>",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Shikyaro/multi-data-source.git"
+  },
+  "license": "MIT",
   "version": "0.0.1",
   "scripts": {
     "autofix": "eslint --fix ."
