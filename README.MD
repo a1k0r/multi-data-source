@@ -18,7 +18,7 @@ npm install multi-data-source
 
 ## Dependencies
 
-* [pg](https://github.com/brianc/node-postgres) -- Postgres connector based on this module
+* [pg](https://github.com/brianc/node-postgres) -- Used to handle postgres connection
 
 ## Usage example
 
