@@ -1,5 +1,5 @@
 {
-  "name": "multi-storage",
+  "name": "multi-data-source",
   "author": "Pavel Romanov <alkor@alkor.pw>",
   "version": "0.0.1",
   "scripts": {

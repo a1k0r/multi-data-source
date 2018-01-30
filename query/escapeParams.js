@@ -25,9 +25,26 @@ const processArray = (value, arrayFormattingRule = false) => {
     }
     return stringArray;
 };
+const wrapValue = value => {
+    let resultValue = '\'';
+
+    for (let i = 0; i < value.length; i++) {
+        const char = value[i];
+        if (char === '\'') {
+            resultValue += char + char;
+        } else if (char === '\\') {
+            resultValue += char + char;
+        } else {
+            resultValue += char;
+        }
+    }
+
+    resultValue += '\'';
+    return resultValue;
+};
 
 const escapeValue = (value, type) => {
-    let literal = '';
+    let strVal = '';
 
     if (value === undefined || value === null) { // eslint-disable-line no-undefined
         return 'NULL';
@@ -42,28 +59,12 @@ const escapeValue = (value, type) => {
     } else if (Array.isArray(value) === true) {
         return processArray(value, type);
     } else if (value === Object(value)) {
-        literal = JSON.stringify(value);
+        strVal = JSON.stringify(value);
     } else {
-        // create copy
-        literal = value.toString().slice(0);
+        strVal = value.toString().slice(0);
     }
 
-    let resultValue = '\'';
-
-    for (let i = 0; i < literal.length; i++) {
-        const char = literal[i];
-        if (char === '\'') {
-            resultValue += char + char;
-        } else if (char === '\\') {
-            resultValue += char + char;
-        } else {
-            resultValue += char;
-        }
-    }
-
-    resultValue += '\'';
-
-    return resultValue;
+    return wrapValue(strVal);
 };
 
 module.exports = (query, params) => {
