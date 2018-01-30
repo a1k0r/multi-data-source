@@ -6,10 +6,7 @@
     "autofix": "eslint --fix ."
   },
   "dependencies": {
-    "pg": "^7.4.1",
-    "mobitel-json-schema-template": "^1.0.3",
-    "mobitel-zschema-readable-error": "^1.0.2",
-    "z-schema": "^3.19.0"
+    "pg": "^7.4.1"
   },
   "devDependencies": {
     "eslint": "^4.16.0",
