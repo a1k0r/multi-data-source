@@ -1,4 +1,5 @@
-const escapeParams = require('./escapeParams.js');
+// const escapeParams = require('./escapeParams.js');
+const templatingStrategies = require('./templating-strategies');
 /**
  * @class
  */
@@ -7,41 +8,48 @@ class QueryTemplater {
      * @constructor
      */
     constructor() {
-        this.queryCache = new Map();
+        // TODO: think about query cache adding
+        this._paramSearchRegex = /\{\{(#)?([-\w]+)\}\}/gui;
+        /** @type Map<String,AbstractTemplatingStrategy> */
+        this._templatingStrategies = new Map();
+
+        this._initTemplatingStrategies();
     }
 
     /**
-     * @param {String} query query
-     * @param {String} addon addon
-     * @param {*} buildParam buildParam
-     * @param {Boolean} value value
-     * @param {String} sql sql
-     * @returns {string | void | *} built query
-     * @private
+     * @protected
      */
-    _processCommonTemplate(query, addon, buildParam, value, sql) {
-        return query.replace(`{{${addon}}}`, !!buildParam === value ? sql : '');
+    _initTemplatingStrategies() {
+        for (const tsName of Object.keys(templatingStrategies)) {
+            /** @type AbstractTemplatingStrategy */
+            const strategy = new templatingStrategies[tsName]();
+            this._templatingStrategies.set(strategy.getPrefix(), strategy);
+        }
     }
 
-    /**
-     * @param {String} query query
-     * @param {String} addon addon
-     * @param {*} buildParam buildParam
-     * @param {String} delimiter delimiter
-     * @param {String} sql sql
-     * @returns {string | void | *} built query
-     * @private
-     */
-    _processCyclicTemplate(query, addon, buildParam, delimiter, sql) {
-        const replacementString = buildParam.reduce((res, paramObject, id) => {
-            if (typeof (paramObject) === 'object') {
-                res += ` ${id ? delimiter : ''} ${escapeParams(sql, paramObject)}`; // eslint-disable-line no-param-reassign
+    _processQuery({sql: querySQL, addons}, buildParams) {
+        let resultQuery = querySQL;
+        let matchArray;
+        while ((matchArray = this._paramSearchRegex.exec(querySQL)) !== null) {
+            const [, prefix = '', additionName] = matchArray;
+            const addon = addons[additionName];
+            if (addon) {
+                const {sql: additionSQL, options: additionOptions} = addon;
+                const additionParam = buildParams[additionOptions.propertyName];
+
+                const strategyParam = {
+                    additionName,
+                    additionSQL,
+                    additionOptions,
+                };
+
+                resultQuery = this._templatingStrategies.get(prefix)
+                    .applyStrategy(resultQuery, strategyParam, additionParam);
+                continue;
             }
-
-            return res;
-        }, '');
-
-        return query.replace(`{{${addon}}}`, replacementString);
+            throw new TypeError(`Addon ${additionName} is not presented in query definition`);
+        }
+        return resultQuery;
     }
 
     /**
@@ -52,24 +60,7 @@ class QueryTemplater {
      * @returns {String} built query
      */
     buildQuery({name, sql, addons}, buildParams) {
-        let builtQuery;
-        const queryKey = JSON.stringify({name, buildParams});
-        if (this.queryCache.has(queryKey)) {
-            builtQuery = this.queryCache.get(queryKey);
-        } else {
-            builtQuery = sql;
-            for (const add of Object.keys(addons)) {
-                const {arg: {name, value}, sql, delimiter} = addons[add];
-                const param = buildParams[name];
-                if (Array.isArray(param)) {
-                    builtQuery = this._processCyclicTemplate(builtQuery, add, param, delimiter, sql);
-                } else {
-                    builtQuery = this._processCommonTemplate(builtQuery, add, param, value, sql);
-                }
-            }
-            this.queryCache.set(queryKey, builtQuery);
-        }
-        return builtQuery;
+        return this._processQuery({sql, addons}, buildParams);
     }
 }
 
