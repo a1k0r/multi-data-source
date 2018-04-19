@@ -1,7 +1,7 @@
 const {Pool} = require('pg');
 
-const AbstractConnector = require('./AbstractConnector');
-const PostgresConnection = require('../connections/PostgresConnection');
+const AbstractConnector = require('./abstract-connector.js');
+const PostgresConnection = require('../connections/postgres-connection.js');
 
 /**
  * @inheritDoc
@@ -12,12 +12,7 @@ class PostgresConnector extends AbstractConnector {
      */
     constructor(config) {
         super(config);
-
         this.pool = new Pool({...config});
-
-        // this.pool.on('error', error => {
-        //     // log.error(`Something happened with Postgres pool ${config.storageName}. errorCode: ${error.code}. error: ${error}`);
-        // });
     }
 
     /**

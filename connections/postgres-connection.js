@@ -1,4 +1,4 @@
-const AbstractConnection = require('./AbstractConnection');
+const AbstractConnection = require('./abstract-connection.js');
 const {escapeParams, QueryTemplater} = require('../query');
 
 /**
