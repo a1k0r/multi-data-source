@@ -19,10 +19,6 @@ class ConnectorFactory {
      * @private
      */
     _getConnectorDefaults() {
-        // TODO change
-        if (process.env.NODE_ENV === 'testing') {
-
-        }
         return {
             'pg': PostgresConnector,
             'tst': TestingConnector,
