@@ -53,7 +53,6 @@ class DataStorage {
     async disconnectAll() {
         for (const [, connector] of this.connectors) {
             await connector.closeConnection();
-            // log.info(`Connector ${name} disconnected`);
         }
     }
 }

@@ -12,9 +12,9 @@ npm install multi-data-source
 ## Features
 
 * Multiple data sources support
-* Multiple RDBMS support (only PostgreSQL and MySQL for now, but you feel free to create your own connector to favorite RDBMS)
-* Little query template engine
-* Single interface to pass query parameters to all RDBMS by built-in query param escape module
+* Multiple RDBMS support (only PostgreSQL for now, but you feel free to contribute your own connector to favorite RDBMS)
+* Single interface to pass query parameters to multiple RDBMS with param escaping module
+
 
 ## Dependencies
 

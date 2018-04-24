@@ -16,8 +16,8 @@ class MockManager {
         if (this._paramsMocks.has(name)) {
             this._paramsMocks.get(name).push({
                 params: args,
-                returns:
-            })
+                returns,
+            });
         }
     }
 

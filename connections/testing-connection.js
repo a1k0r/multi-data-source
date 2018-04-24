@@ -1,6 +1,5 @@
 const AbstractConnection = require('./abstract-connection');
 const MockManager = require('../mock/mock-manager.js');
-const {escapeParams, QueryTemplater} = require('../query');
 
 /**
  * @inheritDoc
@@ -10,8 +9,6 @@ class TestingConnection extends AbstractConnection {
      * @inheritDoc
      */
     rawQuery(queryText, queryParams, queryOptions = null) {
-        const preparedQuery = escapeParams(queryText, queryParams);
-        return this._executeQuery(preparedQuery);
     }
 
     /**
