@@ -107,16 +107,16 @@ This library using equal query definition to [query-template](https://github.com
 
 ```js
 const query = {
-  sql: 'SELECT * FROM table', // String with SQL code
-  addons: { // Object with named additions
-    addonName: { // Addition object
-        sql: 'AND field1 = :field1', // String with addition SQL
-        additionOptions: { // Object with addition config
-            propertyName: 'field1', // Name of templating property
-            propertyValue: true, // Value of templating property
-        }
-    }   
-  }
+    sql: 'SELECT * FROM table', // String with SQL code
+    addons: { // Object with named additions
+        addonName: { // Addition object
+            sql: 'AND field1 = :field1', // String with addition SQL
+            additionOptions: { // Object with addition config
+                propertyName: 'field1', // Name of templating property
+                propertyValue: true, // Value of templating property
+            }
+        }   
+    }
 }
 ```
 
