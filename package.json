@@ -8,7 +8,7 @@
   "license": "MIT",
   "version": "0.0.2",
   "scripts": {
-    "autofix": "eslint --fix .",
+    "autofix": "eslint --fix ."
   },
   "dependencies": {
     "pg": "^7.4.1",

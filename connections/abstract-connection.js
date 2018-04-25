@@ -21,7 +21,7 @@ class AbstractConnection {
     /**
      * @abstract
      * @async
-     * @param {{name: String, sql:String, addonds: Object}} queryObject query data
+     * @param {{name: String, sql:String, addons: Object}} queryObject query data
      * @param {Object} queryParams named params
      * @param {Object} queryOptions options
      * @returns {Promise<Array>} query result

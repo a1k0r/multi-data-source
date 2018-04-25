@@ -12,7 +12,7 @@ class PostgresConnection extends AbstractConnection {
      * @private
      */
     async _executeQuery(query, params) {
-        const {rows} = await this.client.query(query);
+        const {rows} = await this.client.query(query, params);
         return rows;
     }
 
@@ -29,7 +29,10 @@ class PostgresConnection extends AbstractConnection {
      */
     query(queryObject, queryParams, queryOptions = {}) {
         const {sql, addons} = queryObject;
-        const {templateParams} = queryOptions;
+        if (!sql) {
+            throw new TypeError('Invalid query object, "sql" property missing');
+        }
+        const {templateParams = {}} = queryOptions;
         let queryText = sql;
 
         if (addons) {
