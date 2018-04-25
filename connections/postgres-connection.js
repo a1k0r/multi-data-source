@@ -1,5 +1,4 @@
-const AbstractConnection = require('./AbstractConnection');
-const {escapeParams, QueryTemplater} = require('../query');
+const AbstractConnection = require('./abstract-connection.js');
 
 /**
  * @inheritDoc
@@ -8,11 +7,12 @@ class PostgresConnection extends AbstractConnection {
     /**
      * @async
      * @param {String} query SQL
+     * @param {Array} params query params
      * @returns {Promise<Array>} result
      * @private
      */
-    async _executeQuery(query) {
-        const {rows} = await this.client.query(query);
+    async _executeQuery(query, params) {
+        const {rows} = await this.client.query(query, params);
         return rows;
     }
 
@@ -20,25 +20,27 @@ class PostgresConnection extends AbstractConnection {
      * @inheritDoc
      */
     rawQuery(queryText, queryParams, queryOptions = null) {
-        const preparedQuery = escapeParams(queryText, queryParams);
-        return this._executeQuery(preparedQuery);
+        const {query, params} = this.templater.parametrizeQuery(queryText, queryParams, this.config.type);
+        return this._executeQuery(query, params);
     }
 
     /**
      * @inheritDoc
      */
     query(queryObject, queryParams, queryOptions = {}) {
-        const {sql} = queryObject;
+        const {sql, addons} = queryObject;
+        if (!sql) {
+            throw new TypeError('Invalid query object, "sql" property missing');
+        }
+        const {templateParams = {}} = queryOptions;
         let queryText = sql;
 
-        const {templateParams} = queryOptions;
-        if (templateParams) {
-            queryText = QueryTemplater.buildQuery(queryObject, templateParams);
+        if (addons) {
+            queryText = this.templater.processTemplates(queryObject, {...queryParams, ...templateParams});
         }
 
-        const preparedQuery = escapeParams(queryText, queryParams);
-
-        return this._executeQuery(preparedQuery);
+        const {query, params} = this.templater.parametrizeQuery(queryText, queryParams, this.config.type);
+        return this._executeQuery(query, params);
     }
 
     /**

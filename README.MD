@@ -12,13 +12,14 @@ npm install multi-data-source
 ## Features
 
 * Multiple data sources support
-* Multiple RDBMS support (only PostgreSQL and MySQL for now, but you feel free to create your own connector to favorite RDBMS)
-* Little query template engine
-* Single interface to pass query parameters to all RDBMS by built-in query param escape module
+* Multiple RDBMS support (only PostgreSQL for now, but you feel free to contribute your own connector to favorite RDBMS)
+* Single interface to pass query parameters to multiple RDBMS with [param wrapping module](https://github.com/shikyaro/node-query-template)
+
 
 ## Dependencies
 
-* [pg](https://github.com/brianc/node-postgres) -- Used to handle postgres connection
+* [pg](https://github.com/brianc/node-postgres) -- Used to handle Postgres connection
+* [query-template](https://github.com/shikyaro/node-query-template) -- Used to process queries before execution (templating and parametrizing)
 
 ## Usage example
 
@@ -52,15 +53,15 @@ const getUsersByScore = {
         `,
     addons: {
         noGlobalJoin: {
-            arg: {name: 'global', value: false},
+            options: {propertyName: 'global', propertyValue: false},
             sql: 'INNER JOIN mega_jackpot_halls AS mjh USING(hall_id)',
         },
         nickname: {
-            arg: {name: 'needNickname', value: true},
+            options: {propertyName: 'needNickname', propertyValue: true},
             sql: ', nickname',
         },
         balance: {
-            arg: {name: 'balanceCondition', value: true},
+            options: {propertyName: 'balanceCondition', propertyValue: true},
             sql: 'AND balance >= :balance',
         },
     },
@@ -89,6 +90,32 @@ try {
 } finally {
     if (connection) {
         await connection.release;
+    }
+}
+```
+
+## Configuration guide
+
+### Storage configuration
+By default storage conig is semi-equal to [pg](https://github.com/brianc/node-postgres) config with additional field `storageType`.
+
+**Supported storage types:**
+* `pg` -- type for PostgreSQL connection
+
+### Query configuration
+This library using equal query definition to [query-template](https://github.com/shikyaro/node-query-template)
+
+```js
+const query = {
+    sql: 'SELECT * FROM table', // String with SQL code
+    addons: { // Object with named additions
+        addonName: { // Addition object
+            sql: 'AND field1 = :field1', // String with addition SQL
+            options: { // Object with addition config
+                propertyName: 'field1', // Name of templating property
+                propertyValue: true, // Value of templating property
+            }
+        }   
     }
 }
 ```

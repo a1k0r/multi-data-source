@@ -1,4 +1,4 @@
-const {PostgresConnectorFactory} = require('./factories');
+const ConnectorFactory = require('./factories/connector-factory.js');
 
 /**
  * @class
@@ -13,28 +13,19 @@ class DataStorage {
         this.storageConfig = storageConfig;
         /** @type {Map<String,AbstractConnector>} */
         this.connectors = new Map();
-        /** @type {{String:AbstractConnectorFactory}} */
-        this.factoriesAssociation = {
-            'pg': new PostgresConnectorFactory(storageConfig),
-        };
+        this._factory = new ConnectorFactory(storageConfig);
     }
-
-    // addFactory(name, factory) {
-    //     this.factoriesAssociation[name] = new factory(this.storageConfig)
-    // }
 
     /**
      * @param {String} connectorName connector name
-     * @returns {Promise.<AbstractConnector>} Connector
+     * @returns {AbstractConnector} Connector
      */
-    async getConnector(connectorName) {
+    getConnector(connectorName) {
         if (this.connectors.has(connectorName)) {
             return this.connectors.get(connectorName);
         }
 
-        const {storageType} = this.storageConfig[connectorName];
-
-        const connector = await this.factoriesAssociation[storageType].createConnector(connectorName);
+        const connector = this._factory.createConnector(connectorName);
 
         if (connector) {
             this.connectors.set(connectorName, connector);
@@ -56,12 +47,12 @@ class DataStorage {
     }
 
     /**
+     * Method for graceful shutdown
      * @async
      */
     async disconnectAll() {
         for (const [, connector] of this.connectors) {
             await connector.closeConnection();
-            // log.info(`Connector ${name} disconnected`);
         }
     }
 }

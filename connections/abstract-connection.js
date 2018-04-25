@@ -1,15 +1,17 @@
+const QueryTemplater = require('query-template');
 /**
  * @class {AbstractConnection}
  * @abstract
  */
 class AbstractConnection {
     /**
-     * @param {{client: object, queries: object?}} config config obj
+     * @param {{client: object, queries: object?, templater: object?}} config config obj
      */
     constructor(config) {
         this.config = config;
         this.client = config.client;
         this.queries = config.queries;
+        this.templater = config.templater || new QueryTemplater();
 
         if (new.target === AbstractConnection) {
             throw new TypeError('Abstract class can not be created!');
@@ -19,7 +21,7 @@ class AbstractConnection {
     /**
      * @abstract
      * @async
-     * @param {{name: String, sql:String, addonds: Object}} queryObject query data
+     * @param {{name: String, sql:String, addons: Object}} queryObject query data
      * @param {Object} queryParams named params
      * @param {Object} queryOptions options
      * @returns {Promise<Array>} query result
