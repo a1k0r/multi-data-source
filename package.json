@@ -6,9 +6,10 @@
     "url": "git://github.com/Shikyaro/multi-data-source.git"
   },
   "license": "MIT",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "scripts": {
-    "autofix": "eslint --fix ."
+    "autofix": "eslint --fix .",
+    "test": "./node_modules/.bin/jest ./test"
   },
   "dependencies": {
     "pg": "^7.4.1",

@@ -13,7 +13,7 @@ npm install multi-data-source
 
 * Multiple data sources support
 * Multiple RDBMS support (only PostgreSQL for now, but you feel free to contribute your own connector to favorite RDBMS)
-* Single interface to pass query parameters to multiple RDBMS with param escaping module
+* Single interface to pass query parameters to multiple RDBMS with [param wrapping module](https://github.com/shikyaro/node-query-template)
 
 
 ## Dependencies
@@ -53,15 +53,15 @@ const getUsersByScore = {
         `,
     addons: {
         noGlobalJoin: {
-            additionOptions: {propertyName: 'global', propertyValue: false},
+            options: {propertyName: 'global', propertyValue: false},
             sql: 'INNER JOIN mega_jackpot_halls AS mjh USING(hall_id)',
         },
         nickname: {
-            additionOptions: {propertyName: 'needNickname', propertyValue: true},
+            options: {propertyName: 'needNickname', propertyValue: true},
             sql: ', nickname',
         },
         balance: {
-            additionOptions: {propertyName: 'balanceCondition', propertyValue: true},
+            options: {propertyName: 'balanceCondition', propertyValue: true},
             sql: 'AND balance >= :balance',
         },
     },
@@ -111,7 +111,7 @@ const query = {
     addons: { // Object with named additions
         addonName: { // Addition object
             sql: 'AND field1 = :field1', // String with addition SQL
-            additionOptions: { // Object with addition config
+            options: { // Object with addition config
                 propertyName: 'field1', // Name of templating property
                 propertyValue: true, // Value of templating property
             }
