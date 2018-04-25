@@ -18,7 +18,8 @@ npm install multi-data-source
 
 ## Dependencies
 
-* [pg](https://github.com/brianc/node-postgres) -- Used to handle postgres connection
+* [pg](https://github.com/brianc/node-postgres) -- Used to handle Postgres connection
+* [query-template](https://github.com/shikyaro/node-query-template) -- Used to process queries before execution (templating and parametrizing)
 
 ## Usage example
 
@@ -52,15 +53,15 @@ const getUsersByScore = {
         `,
     addons: {
         noGlobalJoin: {
-            arg: {name: 'global', value: false},
+            additionOptions: {propertyName: 'global', propertyValue: false},
             sql: 'INNER JOIN mega_jackpot_halls AS mjh USING(hall_id)',
         },
         nickname: {
-            arg: {name: 'needNickname', value: true},
+            additionOptions: {propertyName: 'needNickname', propertyValue: true},
             sql: ', nickname',
         },
         balance: {
-            arg: {name: 'balanceCondition', value: true},
+            additionOptions: {propertyName: 'balanceCondition', propertyValue: true},
             sql: 'AND balance >= :balance',
         },
     },
@@ -90,6 +91,32 @@ try {
     if (connection) {
         await connection.release;
     }
+}
+```
+
+## Configuration guide
+
+### Storage configuration
+By default storage conig is semi-equal to [pg](https://github.com/brianc/node-postgres) config with additional field `storageType`.
+
+**Supported storage types:**
+* `pg` -- type for PostgreSQL connection
+
+### Query configuration
+This library using equal query definition to [query-template](https://github.com/shikyaro/node-query-template)
+
+```js
+const query = {
+  sql: 'SELECT * FROM table', // String with SQL code
+  addons: { // Object with named additions
+    addonName: { // Addition object
+        sql: 'AND field1 = :field1', // String with addition SQL
+        additionOptions: { // Object with addition config
+            propertyName: 'field1', // Name of templating property
+            propertyValue: true, // Value of templating property
+        }
+    }   
+  }
 }
 ```
 
