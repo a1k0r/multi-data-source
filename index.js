@@ -47,6 +47,29 @@ class DataStorage {
     }
 
     /**
+     * @async
+     * @param {String} connectorName connector name
+     * @param {{name: String, sql:String, addons: Object}} queryObject query data
+     * @param {Object} queryParams named params
+     * @param {Object} queryOptions options
+     * @returns {Promise<Array>} query result
+     */
+    async query(connectorName, queryObject, queryParams, queryOptions = {}) {
+        let connection;
+        try {
+            connection = await this.getConnection(connectorName);
+            const data = await connection.query(queryObject, queryParams, queryOptions);
+            return data;
+        } catch (error) {
+            throw error;
+        } finally {
+            if (connection) {
+                await connection.release();
+            }
+        }
+    }
+
+    /**
      * Method for graceful shutdown
      * @async
      */
