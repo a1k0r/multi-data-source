@@ -12,8 +12,24 @@ class MysqlConnector extends AbstractConnector {
      */
     constructor(config) {
         super(config);
-        const commonPool = mysql.createPool({...config});
+        const commonPool = mysql.createPool(this._cleanPoolConfig({...config}));
         this.pool = commonPool.promise();
+    }
+
+    _cleanPoolConfig(conf) {
+        const optionsList = [
+            'storageName',
+            'storageType',
+        ];
+
+        const resultConfig = Object.keys(conf).reduce((acm, option) => {
+            if ((optionsList.findIndex(opt => opt === option) === -1)) {
+                acm[option] = conf[option];
+            }
+            return acm;
+        }, {});
+
+        return resultConfig;
     }
 
     /**
