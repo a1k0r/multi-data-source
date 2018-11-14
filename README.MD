@@ -13,7 +13,7 @@ npm install multi-data-source
 
 * Multiple data sources support
 * Multiple RDBMS support (only PostgreSQL for now, but you feel free to contribute your own connector to favorite RDBMS)
-* Single interface to pass query parameters to multiple RDBMS with [param wrapping module](https://github.com/shikyaro/node-query-template)
+* Named params with [param wrapping module](https://github.com/shikyaro/node-query-template)
 
 
 ## Dependencies

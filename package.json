@@ -9,16 +9,30 @@
   "version": "0.0.4",
   "scripts": {
     "autofix": "eslint --fix .",
-    "test": "./node_modules/.bin/jest ./test"
+    "test": "NODE_ENV=test node_modules/.bin/mocha test/*.test.js"
   },
   "dependencies": {
-    "pg": "^7.4.1",
-    "query-template": "0.0.3"
+    "pg": "^7.6.1",
+    "query-template": "^1.1.0"
   },
   "devDependencies": {
-    "eslint": "^4.16.0",
+    "sinon": "^7.1.1",
+    "eslint": "^4.19.1",
     "eslint-config-google": "^0.9.1",
-    "eslint-plugin-import": "^2.8.0",
-    "jest": "^22.4.3"
-  }
+    "eslint-plugin-import": "^2.14.0",
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0"
+  },
+  "keywords": [
+    "postgres",
+    "postgresql",
+    "sql",
+    "query",
+    "template",
+    "rdbms",
+    "data",
+    "datasource",
+    "pg",
+    "mysql"
+  ]
 }

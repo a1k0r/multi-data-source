@@ -14,6 +14,13 @@ class PostgresConnector extends AbstractConnector {
     constructor(config) {
         super(config);
         this.pool = new Pool({...config});
+        this.pool.on('connect', () => {/* TODO: ping */});
+        this.pool.on('error', () => {/* TODO: error */});
+        // this.pool.on('error', () => {/* TODO: error */});
+    }
+
+    _doPing() {
+
     }
 
     /**
