@@ -144,6 +144,22 @@ describe('PostgresConnection', () => {
             expect(querySpy.lastCall.args[1]).to.be.deep.equal([1, 2]);
         });
 
+        it('should handle simple correct query with repeated params', async () => {
+            const query = {
+                sql: 'SELECT * FROM table WHERE field1 = :field1 {{t1}}',
+                addons: {
+                    t1: {
+                        sql: 'AND field2 = :field2 AND field1 = :field1',
+                        options: {propertyName: 'field2t'},
+                    },
+                },
+            };
+
+            await pq.query(query, {field1: 1, field2: 2}, {templateParams: {field2t: true}});
+            expect(querySpy.lastCall.args[0]).to.be.equal('SELECT * FROM table WHERE field1 = $1 AND field2 = $2 AND field1 = $1');
+            expect(querySpy.lastCall.args[1]).to.be.deep.equal([1, 2]);
+        });
+
         it('should handle simple query without template params', async () => {
             const query = {
                 sql: 'SELECT * FROM table WHERE field1 = :field1 {{t1}}',

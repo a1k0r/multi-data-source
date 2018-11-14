@@ -5,7 +5,7 @@ const QueryTemplater = require('query-template');
  */
 class AbstractConnection {
     /**
-     * @param {{client: object, queries: object?, templater: object?}} config config obj
+     * @param {{client: object, queries: object?, templater: object?, type: string}} config config obj
      */
     constructor(config) {
         this.config = config;
@@ -20,14 +20,37 @@ class AbstractConnection {
 
     /**
      * @abstract
+     * @param {String} query query string
+     * @param {Object|Array} params params object/array/etc
+     * @returns {Promise<Array>} result
+     * @protected
+     */
+    _executeQuery(query, params) {
+        throw new TypeError('Method "_executeQuery" must be overridden!');
+    }
+
+    /**
+     * @abstract
      * @async
      * @param {{name: String, sql:String, addons: Object}} queryObject query data
      * @param {Object} queryParams named params
      * @param {Object} queryOptions options
      * @returns {Promise<Array>} query result
      */
-    query(queryObject, queryParams, queryOptions = null) {
-        throw new TypeError('This method must be overridden!');
+    query(queryObject, queryParams, queryOptions = {}) {
+        const {sql, addons} = queryObject;
+        if (!sql) {
+            throw new TypeError('Invalid query object, "sql" property missing');
+        }
+        const {templateParams = {}} = queryOptions;
+        let queryText = sql;
+
+        if (addons) {
+            queryText = this.templater.processTemplates(queryObject, {...queryParams, ...templateParams});
+        }
+
+        const {query, params} = this.templater.parametrizeQuery(queryText, queryParams, this.config.type);
+        return this._executeQuery(query, params);
     }
 
     /**
@@ -58,6 +81,7 @@ class AbstractConnection {
     }
 
     /**
+     * Execute query without templates (parameterizing only!)
      * @abstract
      * @async
      * @param {String} queryText SQL
@@ -66,7 +90,8 @@ class AbstractConnection {
      * @returns {Promise<Array>} Query result
      */
     rawQuery(queryText, queryParams, queryOptions = null) {
-        throw new TypeError('This method must be overridden!');
+        const {query, params} = this.templater.parametrizeQuery(queryText, queryParams, this.config.type);
+        return this._executeQuery(query, params);
     }
 
     /**
