@@ -3,7 +3,7 @@ const AbstractConnection = require('./abstract-connection.js');
 /**
  * @inheritDoc
  */
-class PostgresConnection extends AbstractConnection {
+class MysqlConnection extends AbstractConnection {
     /**
      * @async
      * @param {String} query SQL
@@ -12,7 +12,7 @@ class PostgresConnection extends AbstractConnection {
      * @private
      */
     async _executeQuery(query, params) {
-        const {rows} = await this.client.query(query, params);
+        const [rows] = await this.client.query(query, params);
         return rows;
     }
 
@@ -45,4 +45,4 @@ class PostgresConnection extends AbstractConnection {
     }
 }
 
-module.exports = PostgresConnection;
+module.exports = MysqlConnection;

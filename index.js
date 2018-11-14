@@ -42,7 +42,6 @@ class DataStorage {
      */
     async getConnection(connectorName) {
         const connector = await this.getConnector(connectorName);
-
         return connector.getConnection();
     }
 

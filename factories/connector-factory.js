@@ -1,4 +1,4 @@
-const {PostgresConnector, TestingConnector} = require('../connectors');
+const {PostgresConnector, TestingConnector, MysqlConnector} = require('../connectors');
 /**
  * @class
  */
@@ -21,6 +21,7 @@ class ConnectorFactory {
     _getConnectorDefaults() {
         return {
             'pg': PostgresConnector,
+            'mysql': MysqlConnector,
             'tst': TestingConnector,
         };
     }
