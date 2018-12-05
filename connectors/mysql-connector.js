@@ -52,9 +52,15 @@ class MysqlConnector extends AbstractConnector {
      */
     async query(queryObject, queryParams, queryOptions = {}) {
         const conn = await this.getConnection();
-        const result = await conn.query(queryObject, queryParams, queryOptions);
-        await conn.release();
-        return result;
+        try {
+            const result = await conn.query(queryObject, queryParams, queryOptions);
+            return result;
+        } catch (error) {
+            throw error;
+        } finally {
+            await conn.release();
+        }
+
     }
 
     /**

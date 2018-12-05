@@ -49,7 +49,7 @@ class AbstractConnection {
             queryText = this.templater.processTemplates(queryObject, {...queryParams, ...templateParams});
         }
 
-        const {query, params} = this.templater.parametrizeQuery(queryText, queryParams, this.config.type);
+        const {query, params} = this.templater.parametrizeQuery(queryText, queryParams, this.config.storageType || this.config.type);
         return this._executeQuery(query, params);
     }
 
